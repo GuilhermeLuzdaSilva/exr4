@@ -11,23 +11,22 @@ public class DAO {
     
     public boolean conectar() {
         boolean status = false;
-        // 1. Defina as strings de configuração
         String driverName = "org.postgresql.Driver";
-        String serverName = "localhost";
-        String mydatabase = "usuarios";
-        // A URL segue o padrão: jdbc:postgresql://servidor:porta/banco
-        String url = "jdbc:postgresql://" + serverName + ":5432/" + mydatabase;
-        String username = "ti2cc";
-        String password = "ti@cc"; // A senha que você usa no phpPgAdmin
+        
+        
+        String serverName = "exr4.postgres.database.azure.com";
+        String mydatabase = "postgres"; 
+        String username = "Guilherme"; 
+        String password = "R3!macaco"; 
+        
+        
+        String url = "jdbc:postgresql://" + serverName + ":5432/" + mydatabase + "?sslmode=require";
 
         try {
-            // 2. Carregar o Driver na memória
             Class.forName(driverName);
-            
-            // 3. Tentar estabelecer a conexão
             conexao = DriverManager.getConnection(url, username, password);
             status = (conexao != null);
-            System.out.println("Conexão efetuada com sucesso!");
+            System.out.println("Conexão com o Azure efetuada com sucesso!");
         } catch (ClassNotFoundException e) { 
             System.err.println("Erro: Driver JDBC não encontrado! " + e.getMessage());
         } catch (SQLException e) {
@@ -39,9 +38,10 @@ public class DAO {
     public boolean close() {
         boolean status = false;
         try {
-            // 4. Fechar a conexão se ela estiver aberta
-            conexao.close();
-            status = true;
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+                status = true;
+            }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
